@@ -21,7 +21,7 @@ function App() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center justify-center space-y-4">
             <p className="text-gray-600 text-sm">
-              Made with 💙 by AITS Students • {new Date().getFullYear()}
+              Made with 💙 by Team Akatsuki • {new Date().getFullYear()}
             </p>
             <div className="flex space-x-6">
               <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors">About</a>
