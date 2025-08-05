@@ -16,6 +16,7 @@ router.post('/login', authController.login);
 // @route   GET api/auth/me
 // @desc    Get current user
 // @access  Private
-router.get('/me', auth, authController.getMe);
+// Temporarily removed 'auth' middleware for debugging
+router.get('/me', authController.getMe); // Removed 'auth' middleware here
 
 module.exports = router;
