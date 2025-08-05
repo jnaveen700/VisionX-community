@@ -52,10 +52,11 @@ const connectDB = async () => {
 
 connectDB();
 
-// --- API Routes (Uncommenting auth route) ---
-app.use('/api/auth', require('./routes/auth'));
-// app.use('/api/questions', require('./routes/questions')); // Still commented out
-// app.use('/api/projects', require('./routes/projects'));   // Still commented out
+// --- API Routes (DEBUGGING: Temporarily removing auth route require) ---
+// app.use('/api/auth', require('./routes/auth')); // Completely removed this line
+app.use('/api/questions', require('./routes/questions')); // Uncommented this line
+app.use('/api/projects', require('./routes/projects'));   // Uncommented this line
+
 
 // --- Serve static assets in production ---
 if (process.env.NODE_ENV === 'production') {
