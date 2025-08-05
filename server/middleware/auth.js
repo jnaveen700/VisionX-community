@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const config = require('../config');
+// REMOVED: const config = require('../config'); // No longer needed, using process.env
 
 const auth = (req, res, next) => {
   // Get token from header
@@ -12,6 +12,7 @@ const auth = (req, res, next) => {
 
   // Verify token
   try {
+    // This was already correctly using process.env.JWT_SECRET
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded.user;
     next();
