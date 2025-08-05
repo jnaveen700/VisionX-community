@@ -4,7 +4,6 @@ const cors = require('cors');
 const path = require('path'); // Import path module for serving static files
 
 // Load environment variables from .env file if not in production
-// This line should ideally be at the very top of your main server file
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
@@ -12,19 +11,13 @@ if (process.env.NODE_ENV !== 'production') {
 const app = express();
 
 // --- CORS Configuration ---
-// In production, your frontend will have a different URL.
-// We'll use an environment variable for the frontend URL.
-// During development, it will still be localhost.
 const allowedOrigins = [
   'http://localhost:5173', // Your local development frontend URL
-  // In Render, your frontend will get a URL like https://your-frontend-name.onrender.com
-  // You'll add this URL as an environment variable in Render for your backend.
   process.env.FRONTEND_URL // This will be set in Render's environment variables for your backend
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     if (allowedOrigins.indexOf(origin) === -1) {
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
@@ -45,8 +38,6 @@ app.get('/api/health', (req, res) => {
 // --- Connect to MongoDB using environment variable ---
 const connectDB = async () => {
   try {
-    // Use the MONGODB_URI from environment variables
-    // This is the Atlas connection string you provided
     await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -54,8 +45,6 @@ const connectDB = async () => {
     console.log('✅ Connected to MongoDB successfully');
   } catch (err) {
     console.error('❌ MongoDB Connection Error:', err.message);
-    // In a production environment, you might want to exit the process
-    // or have more sophisticated retry logic. For now, a simple retry is fine.
     console.log('Retrying connection in 5 seconds...');
     setTimeout(connectDB, 5000);
   }
@@ -63,21 +52,14 @@ const connectDB = async () => {
 
 connectDB();
 
-// API Routes
+// --- API Routes (DEBUGGING: Commenting out to find the problematic route) ---
 app.use('/api/auth', require('./routes/auth'));
-app.use('/api/questions', require('./routes/questions'));
-app.use('/api/projects', require('./routes/projects'));
+// app.use('/api/questions', require('./routes/questions')); // Commented out for debugging
+// app.use('/api/projects', require('./routes/projects'));   // Commented out for debugging
 
 // --- Serve static assets in production ---
-// This is crucial if you're deploying both frontend and backend as one service
-// or if your backend needs to serve the React build.
-// This block should come AFTER all your API routes.
 if (process.env.NODE_ENV === 'production') {
-  // Set static folder
-  // Assuming your React build output is in '../client/build' relative to the server folder
   app.use(express.static(path.join(__dirname, '../client/build')));
-
-  // For any other requests, serve the React app's index.html
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'));
   });
