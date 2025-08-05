@@ -1,7 +1,13 @@
 import axios from 'axios';
 
+// Define the base URL for your API
+// In development, it will use http://localhost:5000/api
+// In production, it will use the URL provided by Render (e.g., https://your-backend-name.onrender.com/api)
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+
 const api = axios.create({
-    baseURL: 'http://localhost:5000/api',
+    // Use the dynamically set API_BASE_URL here
+    baseURL: `${API_BASE_URL}/api`, // Append '/api' if all your routes are under /api
     headers: {
         'Content-Type': 'application/json'
     },
@@ -30,7 +36,7 @@ api.interceptors.response.use(
             console.error('Request timeout - server might be down');
             return Promise.reject(new Error('Server is not responding. Please try again later.'));
         }
-        
+
         if (!error.response) {
             console.error('Network error - server might be down');
             return Promise.reject(new Error('Cannot connect to server. Please check your internet connection.'));
