@@ -1,31 +1,31 @@
 const express = require('express');
 const router = express.Router();
-const projectController = require('../controllers/projectController');
+const questionController = require('../controllers/questionController'); // Correct controller
 const auth = require('../middleware/auth');
 
-// @route   POST api/projects
-// @desc    Create a project
+// @route   POST api/questions
+// @desc    Create a question
 // @access  Private
-router.post('/', auth, projectController.createProject);
+router.post('/', auth, questionController.createQuestion);
 
-// @route   GET api/projects
-// @desc    Get all projects
+// @route   GET api/questions
+// @desc    Get all questions
 // @access  Public
-router.get('/', projectController.getAllProjects);
+router.get('/', questionController.getAllQuestions);
 
-// @route   GET api/projects/:id
-// @desc    Get project by ID
+// @route   GET api/questions/:id
+// @desc    Get question by ID
 // @access  Public
-router.get('/:id', projectController.getProjectById);
+router.get('/:id', questionController.getQuestionById);
 
-// @route   POST api/projects/:id/comments
-// @desc    Add a comment to project
+// @route   POST api/questions/:id/answers
+// @desc    Add an answer to question
 // @access  Private
-router.post('/:id/comments', auth, projectController.addComment);
+router.post('/:id/answers', auth, questionController.addAnswer);
 
-// @route   PUT api/projects/:id/like
-// @desc    Like a project
+// @route   PUT api/questions/:id/upvote
+// @desc    Upvote a question
 // @access  Private
-router.put('/:id/like', auth, projectController.likeProject);
+router.put('/:id/upvote', auth, questionController.upvoteQuestion);
 
 module.exports = router;
