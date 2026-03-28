@@ -1,7 +1,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-// REMOVED: const config = require('../config'); // No longer needed, using process.env
+const config = require('../config'); // Use config as fallback
+
 
 exports.register = async (req, res) => {
   try {
@@ -34,11 +35,11 @@ exports.register = async (req, res) => {
       }
     };
 
-    // Use process.env.JWT_SECRET and process.env.JWT_EXPIRATION
+    // Use process.env if available, fallback to config
     jwt.sign(
       payload,
-      process.env.JWT_SECRET, // Changed from config.jwtSecret
-      { expiresIn: process.env.JWT_EXPIRATION || '1h' }, // Changed from config.jwtExpiration, added fallback
+      process.env.JWT_SECRET || config.jwtSecret,
+      { expiresIn: process.env.JWT_EXPIRATION || config.jwtExpiration },
       (err, token) => {
         if (err) throw err;
         res.json({ token });
@@ -73,11 +74,11 @@ exports.login = async (req, res) => {
       }
     };
 
-    // Use process.env.JWT_SECRET and process.env.JWT_EXPIRATION
+    // Use process.env if available, fallback to config
     jwt.sign(
       payload,
-      process.env.JWT_SECRET, // Changed from config.jwtSecret
-      { expiresIn: process.env.JWT_EXPIRATION || '1h' }, // Changed from config.jwtExpiration, added fallback
+      process.env.JWT_SECRET || config.jwtSecret,
+      { expiresIn: process.env.JWT_EXPIRATION || config.jwtExpiration },
       (err, token) => {
         if (err) throw err;
         res.json({ token });

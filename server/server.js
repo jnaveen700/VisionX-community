@@ -12,12 +12,16 @@ const app = express();
 
 // --- CORS Configuration ---
 const allowedOrigins = [
-  'http://localhost:5173', // Local development frontend URL
-  'http://localhost:5174', // Alternative local port
-  'http://localhost:5175', // Alternative local port
-  process.env.FRONTEND_URL, // Production frontend URL
-  'https://visionx-community.netlify.app' // Add your Netlify URL here
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175',
+  'https://visionx-community.netlify.app'
 ];
+
+// Add production frontend URL if available
+if (process.env.FRONTEND_URL && process.env.FRONTEND_URL !== 'undefined') {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
 
 app.use(cors({
   origin: function (origin, callback) {
