@@ -51,10 +51,7 @@ app.get('/api/health', (req, res) => {
 // --- Connect to MongoDB using environment variable ---
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log('✅ Connected to MongoDB successfully');
   } catch (err) {
     console.error('❌ MongoDB Connection Error:', err.message);
