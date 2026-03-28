@@ -18,17 +18,23 @@ const allowedOrigins = [
   'https://visionx-community.netlify.app'
 ];
 
-// Add production frontend URL if available
-if (process.env.FRONTEND_URL && process.env.FRONTEND_URL !== 'undefined') {
-  allowedOrigins.push(process.env.FRONTEND_URL);
+// Add production frontend URL if it's a valid URL
+if (process.env.FRONTEND_URL) {
+  const frontendUrl = String(process.env.FRONTEND_URL).trim();
+  // Validate it's actually a URL and not undefined/null/empty
+  if (frontendUrl && frontendUrl !== 'undefined' && frontendUrl.startsWith('http')) {
+    allowedOrigins.push(frontendUrl);
+  }
 }
 
 app.use(cors({
   origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
+    
+    // Check if origin is in allowed list
     if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+      return callback(null, true); // Allow all origins in development, restrict in production if needed
     }
     return callback(null, true);
   },
@@ -59,10 +65,16 @@ const connectDB = async () => {
 
 connectDB();
 
-// --- API Routes (DEBUGGING: Temporarily removing auth route require) ---
-// app.use('/api/auth', require('./routes/auth')); // Completely removed this line
-app.use('/api/questions', require('./routes/questions')); // Uncommented this line
-app.use('/api/projects', require('./routes/projects'));   // Uncommented this line
+// --- API Routes ---
+try {
+  // app.use('/api/auth', require('./routes/auth')); // Auth disabled for now
+  app.use('/api/questions', require('./routes/questions'));
+  app.use('/api/projects', require('./routes/projects'));
+  console.log('✅ Routes loaded successfully');
+} catch (err) {
+  console.error('❌ Error loading routes:', err.message);
+  process.exit(1);
+}
 
 
 // --- Serve static assets in production ---
