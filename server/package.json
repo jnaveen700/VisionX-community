@@ -1,7 +1,7 @@
 {
   "name": "visionx-community-aits",
   "version": "1.0.0",
-  "description": "A simple developer community platform - AITS Student Project 2025",
+  "description": "A simple developer community platform - AITS Student Project 2026",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -14,7 +14,7 @@
     "community",
     "learning"
   ],
-  "author": "[Your Name] - AITS CSE 2025",
+  "author": "[Your Name] - AITS CSE 2026",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.2",

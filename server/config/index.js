@@ -1,5 +1,5 @@
 // My project configuration file
-// AITS Web Development Project - 2025
+// AITS Web Development Project - 2026
 
 // I'm learning about environment variables, but for now keeping it simple
 const config = {
@@ -8,7 +8,7 @@ const config = {
   
   // Secret key for JSON Web Tokens (learned about this in cybersecurity class!)
   // Note to self: In real projects, this should be in environment variables
-  jwtSecret: 'aits-visionx-2025-secret',
+  jwtSecret: 'aits-visionx-2026-secret',
   
   // Token expires in 24 hours
   jwtExpiration: '24h',
@@ -18,7 +18,7 @@ const config = {
   college: 'Annamacharya Institute of Technology and Sciences',
   author: '[Your Name]',
   class: 'B.Tech CSE',
-  year: '2025'
+  year: new Date().getFullYear().toString()
 };
 
 // Export the config so other files can use it

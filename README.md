@@ -1,10 +1,10 @@
 # VisionX Developer Community 🚀
 
-## College Project - AITS 2025
+## College Project - AITS 2026
 - **College:** Annamacharya Institute of Technology and Sciences
 - **Department:** Computer Science and Engineering
 - **Course:** Web Development Project
-- **Year:** 2025
+- **Year:** 2026
 
 ## About My Project 📚
 Hi! I'm [Your Name], and this is my web development project. I created a simple community platform where beginner developers (like me!) can:

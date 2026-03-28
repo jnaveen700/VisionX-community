@@ -12,8 +12,11 @@ const app = express();
 
 // --- CORS Configuration ---
 const allowedOrigins = [
-  'http://localhost:5173', // Your local development frontend URL
-  process.env.FRONTEND_URL // This will be set in Render's environment variables for your backend
+  'http://localhost:5173', // Local development frontend URL
+  'http://localhost:5174', // Alternative local port
+  'http://localhost:5175', // Alternative local port
+  process.env.FRONTEND_URL, // Production frontend URL
+  'https://visionx-community.netlify.app' // Add your Netlify URL here
 ];
 
 app.use(cors({
