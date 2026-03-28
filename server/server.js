@@ -77,12 +77,22 @@ try {
 }
 
 
-// --- Serve static assets in production ---
+// --- Serve static assets in production (if client is built) ---
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'));
-  });
+  const path_to_client = path.join(__dirname, '../client/dist');
+  // Only serve static files if build exists
+  try {
+    const fs = require('fs');
+    if (fs.existsSync(path_to_client)) {
+      app.use(express.static(path_to_client));
+      app.get('*', (req, res) => {
+        res.sendFile(path.resolve(path_to_client, 'index.html'));
+      });
+      console.log('✅ Serving frontend from client/dist');
+    }
+  } catch (err) {
+    console.log('⚠️ Frontend build not found - running API only');
+  }
 }
 
 // Error handling middleware
