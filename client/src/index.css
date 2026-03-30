@@ -80,7 +80,7 @@
   .nav-link {
     @apply px-3 py-2 rounded-md font-medium transition-colors;
     @apply text-base sm:text-sm;
-    @apply min-h-[44px] sm:min-h-auto flex items-center;
+    @apply min-h-[44px] sm:min-h-0 flex items-center;
   }
 
   /* Responsive inputs with touch-friendly sizing */
@@ -88,7 +88,7 @@
     @apply w-full px-4 py-3 sm:py-2 border border-gray-300 rounded-md;
     @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
     @apply text-base sm:text-sm;
-    @apply min-h-[44px] sm:min-h-auto;
+    @apply min-h-[44px] sm:min-h-0;
   }
 
   /* Responsive container */
