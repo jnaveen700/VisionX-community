@@ -1,10 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import api from '../utils/api';
 
 function Home() {
   const navigate = useNavigate();
   const { token, isAuthenticated } = useSelector(state => state.auth);
+  const [questions, setQuestions] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const localToken = localStorage.getItem('token');
@@ -14,15 +18,33 @@ function Home() {
     console.log('   localStorage token:', !!localToken);
     console.log('   Token length:', token?.length || 0);
   }, [token, isAuthenticated]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [questionsRes, projectsRes] = await Promise.all([
+          api.get('/questions'),
+          api.get('/projects')
+        ]);
+        setQuestions(questionsRes.data.slice(0, 3));
+        setProjects(projectsRes.data.slice(0, 3));
+      } catch (err) {
+        console.error('Error fetching home data:', err);
+      }
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
   
   const handleAskQuestion = () => {
     console.log('🔘 Ask a Question clicked');
-    navigate('/questions');
+    navigate('/questions/new');
   };
   
   const handleShareProject = () => {
     console.log('🔘 Share Project clicked');
-    navigate('/projects');
+    navigate('/projects/new');
   };
   
   return (
@@ -99,24 +121,30 @@ function Home() {
             </Link>
           </div>
           <div className="space-y-4">
-            <div className="p-4 bg-gray-50 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200 border border-gray-100 hover:border-blue-100">
-              <h3 className="text-gray-800 font-medium mb-2">How to implement authentication in React?</h3>
-              <p className="text-gray-500 text-sm flex items-center">
-                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Posted 2 hours ago • 5 answers
-              </p>
-            </div>
-            <div className="p-4 bg-gray-50 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200 border border-gray-100 hover:border-blue-100">
-              <h3 className="text-gray-800 font-medium mb-2">Best practices for MongoDB schemas?</h3>
-              <p className="text-gray-500 text-sm flex items-center">
-                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Posted 4 hours ago • 3 answers
-              </p>
-            </div>
+            {loading ? (
+              <div className="text-center py-4">
+                <div className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-blue-500 border-r-transparent"></div>
+                <p className="mt-2 text-gray-500 text-sm">Loading...</p>
+              </div>
+            ) : questions.length > 0 ? (
+              questions.map(question => (
+                <Link 
+                  key={question._id}
+                  to={`/questions/${question._id}`}
+                  className="p-4 bg-gray-50 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200 border border-gray-100 hover:border-blue-100 block"
+                >
+                  <h3 className="text-gray-800 font-medium mb-2">{question.title}</h3>
+                  <p className="text-gray-500 text-sm flex items-center">
+                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {question.views || 0} views • {question.answers?.length || 0} answers
+                  </p>
+                </Link>
+              ))
+            ) : (
+              <p className="text-gray-500 text-center py-4">No questions yet</p>
+            )}
           </div>
         </div>
 
@@ -136,20 +164,36 @@ function Home() {
             </Link>
           </div>
           <div className="space-y-4">
-            <div className="p-4 bg-gray-50 rounded-lg hover:bg-blue-50 cursor-pointer transition-all duration-200 border border-gray-100 hover:border-blue-100 transform hover:-translate-y-0.5">
-              <h3 className="text-gray-800 font-medium mb-3">Task Management App</h3>
-              <div className="flex flex-wrap gap-2">
-                <span className="bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full font-medium">React</span>
-                <span className="bg-green-100 text-green-700 text-xs px-3 py-1 rounded-full font-medium">Node.js</span>
+            {loading ? (
+              <div className="text-center py-4">
+                <div className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-blue-500 border-r-transparent"></div>
+                <p className="mt-2 text-gray-500 text-sm">Loading...</p>
               </div>
-            </div>
-            <div className="p-4 bg-gray-50 rounded-lg hover:bg-blue-50 cursor-pointer transition-all duration-200 border border-gray-100 hover:border-blue-100 transform hover:-translate-y-0.5">
-              <h3 className="text-gray-800 font-medium mb-3">Weather Dashboard</h3>
-              <div className="flex flex-wrap gap-2">
-                <span className="bg-green-100 text-green-700 text-xs px-3 py-1 rounded-full font-medium">Vue.js</span>
-                <span className="bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full font-medium">Express</span>
-              </div>
-            </div>
+            ) : projects.length > 0 ? (
+              projects.map(project => (
+                <Link 
+                  key={project._id}
+                  to={`/projects/${project._id}`}
+                  className="p-4 bg-gray-50 rounded-lg hover:bg-blue-50 cursor-pointer transition-all duration-200 border border-gray-100 hover:border-blue-100 transform hover:-translate-y-0.5 block"
+                >
+                  <h3 className="text-gray-800 font-medium mb-3">{project.title}</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {project.techStack.slice(0, 2).map(tech => (
+                      <span key={tech} className="bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full font-medium">
+                        {tech}
+                      </span>
+                    ))}
+                    {project.techStack.length > 2 && (
+                      <span className="bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium">
+                        +{project.techStack.length - 2}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <p className="text-gray-500 text-center py-4">No projects yet</p>
+            )}
           </div>
         </div>
       </div>
