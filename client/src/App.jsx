@@ -1,6 +1,8 @@
 import { Routes, Route } from 'react-router-dom'
 import { useEffect } from 'react'
 import Home from './pages/Home.jsx'
+import Login from './pages/Login.jsx'
+import Register from './pages/Register.jsx'
 import Questions from './pages/Questions.jsx'
 import Projects from './pages/Projects.jsx'
 import Resources from './pages/Resources.jsx'
@@ -33,6 +35,8 @@ function App() {
       <main className="min-h-[calc(100vh-64px)] py-8 px-4">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/questions" element={<Questions />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/resources" element={<Resources />} />
