@@ -73,15 +73,22 @@ export const getCurrentUser = createAsyncThunk(
   async (_, { getState, rejectWithValue }) => {
     try {
       const { token } = getState().auth;
+      if (!token) {
+        console.warn('⚠️ No token available for getCurrentUser');
+        return rejectWithValue('No token found');
+      }
       const config = {
         headers: {
           'x-auth-token': token
         }
       };
+      console.log('🔐 Fetching current user with token...');
       const response = await axios.get(`${API_URL}/auth/me`, config);
+      console.log('✅ Got current user:', response.data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data.msg);
+      console.error('❌ GetCurrentUser error:', error.response?.status, error.response?.data?.msg);
+      return rejectWithValue(error.response?.data?.msg || 'Failed to fetch user');
     }
   }
 );
@@ -152,15 +159,20 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(getCurrentUser.fulfilled, (state, action) => {
-        console.log('✅ GetCurrentUser fulfilled');
+        console.log('✅ GetCurrentUser fulfilled:', action.payload);
         state.loading = false;
         state.isAuthenticated = true;
         state.user = action.payload;
+        state.error = null;
       })
       .addCase(getCurrentUser.rejected, (state, action) => {
         console.error('❌ GetCurrentUser rejected:', action.payload);
         state.loading = false;
+        state.isAuthenticated = false;
+        state.token = null;
+        state.user = null;
         state.error = action.payload;
+        localStorage.removeItem('token');
       });
   }
 });
