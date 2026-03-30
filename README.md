@@ -1,101 +1,194 @@
-# VisionX Developer Community 🚀
+# VisionX Community ���
 
-## College Project - AITS 2026
-- **College:** Annamacharya Institute of Technology and Sciences
-- **Department:** Computer Science and Engineering
-- **Course:** Web Development Project
-- **Year:** 2026
+> A full-stack developer community platform built by AITS students for collaborative learning, Q&A, and project showcasing.
 
-## About My Project 📚
-Hi! I'm [Your Name], and this is my web development project. I created a simple community platform where beginner developers (like me!) can:
-- Ask questions without feeling shy
-- Share their small projects
-- Learn from other students
-- Earn points and badges for helping others
+**Live URLs:**
+- ��� **Frontend:** https://visionx-community.netlify.app
+- ��� **Backend API:** https://visionx-community-6fmh.onrender.com
+- ��� **GitHub:** https://github.com/jnaveen700/VisionX-community
 
-## What I Learned 🎓
-Through this project, I learned about:
-- Node.js and Express for making web servers
-- MongoDB for storing data
-- React for building user interfaces
-- How to make login/signup systems
-- Working with databases
-- Basic security practices
+---
 
-## Tech Stack
+## ✨ Key Features
 
-- **Frontend:**
-  - React
-  - React Router
-  - Redux Toolkit
-  - TailwindCSS
-  - Vite
+### ✅ Production-Ready Features
 
-- **Backend:**
-  - Node.js
-  - Express.js
-  - MongoDB
-  - JWT Authentication
+| Feature | Status | Details |
+|---------|--------|---------|
+| **User Authentication** | ✅ | Register, login, JWT tokens, session persistence |
+| **Reward Points System** | ✅ | Ask +5pts, Answer +10pts, Accept +25pts, Upvote +2pts |
+| **Questions & Answers** | ✅ | Create, browse, answer, accept best answer, upvote |
+| **Mobile Responsive** | ✅ | Touch-friendly, hamburger menu, <768px optimized |
+| **User Profile** | ✅ | Points, badges, stats, personal activity |
+| **Projects Showcase** | ✅ | Create, browse, like, comment on projects |
 
-## Getting Started
+---
 
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   # Install server dependencies
-   cd server
-   npm install
+## ���️ Tech Stack
 
-   # Install client dependencies
-   cd ../client
-   npm install
-   ```
+**Frontend:** React 18, Vite, Redux Toolkit, React Router v6, Axios, Tailwind CSS  
+**Backend:** Node.js, Express.js, MongoDB, Mongoose, JWT, bcryptjs  
+**Deployment:** Netlify (frontend), Render (backend)
 
-3. Create a `.env` file in the server directory with:
-   ```
-   MONGODB_URI=your_mongodb_uri
-   JWT_SECRET=your_jwt_secret
-   PORT=5000
-   ```
+---
 
-4. Start the development servers:
-   ```bash
-   # Start backend server
-   cd server
-   npm run dev
+## ��� Quick Start
 
-   # Start frontend server (in a new terminal)
-   cd client
-   npm run dev
-   ```
+### Prerequisites
+- Node.js 18+, npm
+- MongoDB Atlas account (free tier)
 
-## Project Structure
+### Installation
+
+```bash
+# Clone repo
+git clone https://github.com/jnaveen700/VisionX-community.git
+cd visionX
+
+# Install dependencies
+cd server && npm install && cd ..
+cd client && npm install && cd ..
+
+# Create .env (root directory)
+cat > .env << 'ENVEOF'
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/visionx
+JWT_SECRET=your_super_secret_key_here_min_32_characters
+JWT_EXPIRATION=7d
+VITE_BACKEND_URL=http://localhost:5000
+NODE_ENV=development
+ENVEOF
+
+# Start development
+# Terminal 1:
+cd server && npm run dev
+
+# Terminal 2:
+cd client && npm run dev
+```
+
+Visit: http://localhost:5173
+
+---
+
+## ��� API Endpoints
 
 ```
-visionx/
-├── client/                # React frontend
+AUTH
+  POST   /api/auth/register       # Create account (name, email, password)
+  POST   /api/auth/login          # Login (email, password)
+  GET    /api/auth/me             # Get current user (protected)
+
+QUESTIONS
+  GET    /api/questions           # All questions
+  POST   /api/questions           # Create (+5pts, protected)
+  GET    /api/questions/:id       # Single question
+  POST   /api/questions/:id/answers           # Post answer (+10pts, protected)
+  PUT    /api/questions/:id/answers/accept    # Accept answer (+25pts, protected)
+  PUT    /api/questions/:id/answers/upvote    # Upvote (+2pts, protected)
+
+PROJECTS
+  GET    /api/projects            # All projects
+  POST   /api/projects            # Create (protected)
+  GET    /api/projects/:id        # Single project
+  PUT    /api/projects/:id/like   # Like (protected)
+  POST   /api/projects/:id/comments  # Comment (protected)
+```
+
+---
+
+##  ��� Features Explained
+
+### Points System
+- **Ask Question:** +5 pts
+- **Answer Question:** +10 pts
+- **Answer Accepted:** +25 pts (answerer) + 5 pts (asker)
+- **Answer Upvoted:** +2 pts per upvote
+- Points display in navbar & profile
+
+### Mobile Responsive
+- Hamburger menu for <768px screens
+- 44px+ touch targets
+- Flexible typography
+- No horizontal scrolling
+
+### Session Management
+- Login → JWT token + user stored
+- Refresh → App fetches user data
+- Valid token → stay logged in
+- Invalid token → auto logout
+
+---
+
+## ��� Project Structure
+
+```
+visionX/
+├── client/                  # React frontend
 │   ├── src/
-│   │   ├── components/    # Reusable components
-│   │   ├── pages/        # Page components
-│   │   ├── features/     # Redux slices
-│   │   └── App.jsx       # Main app component
-│   └── package.json
+│   │   ├── components/      # Reusable UI
+│   │   ├── pages/          # Page components
+│   │   ├── features/       # Redux slices
+│   │   ├── utils/          # API client
+│   │   └── App.jsx         # Main component
+│   └── vite.config.js
 │
-└── server/               # Node.js backend
-    ├── controllers/     # Route controllers
-    ├── models/         # Mongoose models
-    ├── routes/         # Express routes
-    ├── middleware/     # Custom middleware
-    └── server.js      # Server entry point
+├── server/                  # Express backend
+│   ├── controllers/         # Business logic
+│   ├── models/             # Database schemas
+│   ├── routes/             # API endpoints
+│   ├── middleware/         # Auth verification
+│   └── server.js           # Main server
+│
+└── netlify.toml            # Deployment config
 ```
 
-## Contributing
+---
 
-1. Fork the repository
-2. Create a new branch
-3. Make your changes
-4. Submit a pull request
+## ��� Security
 
-## License
+✅ Passwords hashed with bcryptjs (salt: 10)  
+✅ JWT tokens (7-day expiration)  
+✅ Protected routes require token header  
+✅ CORS configured for allowed origins  
+✅ Environment variables for secrets  
 
-ISC License
+---
+
+## ��� Test Account
+
+```
+Email: test@aits.edu
+Password: test123
+```
+
+---
+
+## ��� Debugging Check
+
+- ✅ **Only CSS linter warnings** (no build errors)
+- ✅ **All JavaScript files syntax valid**
+- ✅ **All routes responding correctly**
+- ✅ **Database connections stable**
+- ✅ **Authentication working**
+- ✅ **Points system functional**
+
+---
+
+## ��� Learn More
+
+- React Docs: https://react.dev
+- Express Guide: https://expressjs.com
+- MongoDB: https://docs.mongodb.com
+- Tailwind CSS: https://tailwindcss.com
+
+---
+
+## ��� Credits
+
+- **Developer:** Naveen Kumar
+- **Institution:** AITS CSE 2026
+- **Project:** Web Development
+
+---
+
+**Status:** ✅ Production Ready | **Last Updated:** March 30, 2026
