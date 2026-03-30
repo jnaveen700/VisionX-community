@@ -29,15 +29,25 @@ exports.createQuestion = async (req, res) => {
 exports.getAllQuestions = async (req, res) => {
   try {
     console.log('🔍 getAllQuestions controller called');
+    console.time('questions-query');
+    
     const questions = await Question.find()
       .sort({ createdAt: -1 })
       .populate('author', 'name avatar')
-      .populate('answers.author', 'name avatar');
+      .populate('answers.author', 'name avatar')
+      .maxTimeMS(30000);  // 30 second timeout for this query
+    
+    console.timeEnd('questions-query');
     console.log(`✅ Found ${questions.length} questions`);
     res.json(questions);
   } catch (err) {
     console.error('❌ getAllQuestions error:', err.message);
-    res.status(500).json({ error: 'Server error', message: err.message });
+    console.error('Error name:', err.name);
+    res.status(500).json({ 
+      error: 'Server error', 
+      message: err.message,
+      type: err.name
+    });
   }
 };
 

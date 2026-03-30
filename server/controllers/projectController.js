@@ -31,14 +31,24 @@ exports.createProject = async (req, res) => {
 exports.getAllProjects = async (req, res) => {
   try {
     console.log('🔍 getAllProjects controller called');
+    console.time('projects-query');
+    
     const projects = await Project.find()
       .sort({ createdAt: -1 })
-      .populate('author', 'name avatar');
+      .populate('author', 'name avatar')
+      .maxTimeMS(30000);  // 30 second timeout for this query
+    
+    console.timeEnd('projects-query');
     console.log(`✅ Found ${projects.length} projects`);
     res.json(projects);
   } catch (err) {
     console.error('❌ getAllProjects error:', err.message);
-    res.status(500).json({ error: 'Server error', message: err.message });
+    console.error('Error name:', err.name);
+    res.status(500).json({ 
+      error: 'Server error', 
+      message: err.message,
+      type: err.name
+    });
   }
 };
 

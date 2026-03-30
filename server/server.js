@@ -59,8 +59,22 @@ app.get('/api/health', (req, res) => {
 // --- Connect to MongoDB using environment variable ---
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('🔄 Attempting MongoDB connection...');
+    console.log('URI (masked):', process.env.MONGODB_URI?.substring(0, 30) + '...');
+    
+    await mongoose.connect(process.env.MONGODB_URI, {
+      socketTimeoutMS: 45000,  // 45 seconds
+      serverSelectionTimeoutMS: 45000,  // 45 seconds
+      connectTimeoutMS: 30000,  // 30 seconds
+      retryWrites: true,
+      w: 'majority'
+    });
+    
     console.log('✅ Connected to MongoDB successfully');
+    
+    // Set buffer timeout for queries (increased from default 10s to 30s)
+    mongoose.set('bufferTimeoutMS', 30000);
+    
   } catch (err) {
     console.error('❌ MongoDB Connection Error:', err.message);
     console.log('Retrying connection in 5 seconds...');
@@ -69,6 +83,27 @@ const connectDB = async () => {
 };
 
 connectDB();
+
+// --- MongoDB Status Check Endpoint ---
+app.get('/api/db-status', async (req, res) => {
+  try {
+    const connection = mongoose.connection;
+    const status = {
+      readyState: connection.readyState,
+      readyStateText: ['disconnected', 'connected', 'connecting', 'disconnecting'][connection.readyState],
+      host: connection.host,
+      name: connection.name
+    };
+    
+    if (connection.readyState === 1) {
+      res.json({ status: 'ok', message: 'MongoDB connected', ...status });
+    } else {
+      res.status(503).json({ status: 'error', message: 'MongoDB not connected', ...status });
+    }
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: err.message });
+  }
+});
 
 // --- API Routes ---
 try {
