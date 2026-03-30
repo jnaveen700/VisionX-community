@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
+import { useEffect } from 'react'
 import Home from './pages/Home.jsx'
 import Questions from './pages/Questions.jsx'
 import Projects from './pages/Projects.jsx'
@@ -9,6 +10,23 @@ function App() {
   // Log on app load
   console.log('%c🚀 VisionX App Started', 'color: #ff6b6b; font-weight: bold; font-size: 14px;');
   console.log('Build time:', new Date().toLocaleString());
+  
+  useEffect(() => {
+    console.log('✅ App mounted successfully');
+    console.log('📍 Current pathname:', window.location.pathname);
+    
+    // Test button click
+    const testBtn = document.createElement('button');
+    testBtn.addEventListener('click', () => {
+      console.log('✅ Button click event listener works!');
+    });
+    console.log('🧪 Testing event listeners...');
+    
+    return () => {
+      console.log('🔌 App unmounting');
+    };
+  }, []);
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       <Navbar />
