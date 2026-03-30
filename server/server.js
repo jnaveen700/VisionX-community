@@ -56,32 +56,52 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
 
+// --- Check if MONGODB_URI is set ---
+if (!process.env.MONGODB_URI) {
+  console.error('❌ CRITICAL: MONGODB_URI environment variable is NOT set!');
+  console.error('Please set MONGODB_URI in Render environment variables');
+  // Don't exit, but log loudly
+}
+
 // --- Connect to MongoDB using environment variable ---
+let mongoConnected = false;
+
 const connectDB = async () => {
   try {
     console.log('🔄 Attempting MongoDB connection...');
-    console.log('URI (masked):', process.env.MONGODB_URI?.substring(0, 30) + '...');
+    console.log('MONGODB_URI exists:', !!process.env.MONGODB_URI);
+    console.log('URI (first 50 chars):', process.env.MONGODB_URI?.substring(0, 50) + '...');
+    
+    if (!process.env.MONGODB_URI) {
+      throw new Error('MONGODB_URI is not defined in environment variables');
+    }
     
     await mongoose.connect(process.env.MONGODB_URI, {
-      socketTimeoutMS: 45000,  // 45 seconds
-      serverSelectionTimeoutMS: 45000,  // 45 seconds
-      connectTimeoutMS: 30000,  // 30 seconds
+      socketTimeoutMS: 45000,
+      serverSelectionTimeoutMS: 45000,
+      connectTimeoutMS: 30000,
       retryWrites: true,
       w: 'majority'
     });
     
+    mongoConnected = true;
     console.log('✅ Connected to MongoDB successfully');
+    console.log('MongoDB host:', mongoose.connection.host);
+    console.log('MongoDB db:', mongoose.connection.name);
     
-    // Set buffer timeout for queries (increased from default 10s to 30s)
+    // Set buffer timeout for queries
     mongoose.set('bufferTimeoutMS', 30000);
     
   } catch (err) {
     console.error('❌ MongoDB Connection Error:', err.message);
+    console.error('Error details:', err);
     console.log('Retrying connection in 5 seconds...');
+    mongoConnected = false;
     setTimeout(connectDB, 5000);
   }
 };
 
+// Start connection immediately
 connectDB();
 
 // --- MongoDB Status Check Endpoint ---
@@ -106,6 +126,32 @@ app.get('/api/db-status', async (req, res) => {
 });
 
 // --- API Routes ---
+// Middleware to check MongoDB connection before API calls
+app.use('/api/questions', (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    console.warn('⚠️ MongoDB not connected yet. State:', mongoose.connection.readyState);
+    return res.status(503).json({ 
+      error: 'Database initializing', 
+      message: 'MongoDB connection is being established. Please try again in a few seconds.',
+      dbState: mongoose.connection.readyState
+    });
+  }
+  next();
+});
+
+app.use('/api/projects', (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    console.warn('⚠️ MongoDB not connected yet. State:', mongoose.connection.readyState);
+    return res.status(503).json({ 
+      error: 'Database initializing', 
+      message: 'MongoDB connection is being established. Please try again in a few seconds.',
+      dbState: mongoose.connection.readyState
+    });
+  }
+  next();
+});
+
+// Load routes
 try {
   // app.use('/api/auth', require('./routes/auth')); // Auth disabled for now
   app.use('/api/questions', require('./routes/questions'));
