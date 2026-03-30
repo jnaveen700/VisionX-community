@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import Home from './pages/Home.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
+import Profile from './pages/Profile.jsx'
 import Questions from './pages/Questions.jsx'
 import QuestionDetail from './pages/QuestionDetail.jsx'
 import QuestionForm from './pages/QuestionForm.jsx'
@@ -42,6 +43,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/questions/new" element={<QuestionForm />} />
             <Route path="/questions/:id" element={<QuestionDetail />} />
             <Route path="/questions" element={<Questions />} />
