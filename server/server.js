@@ -187,29 +187,29 @@ app.post('/api/seed', async (req, res) => {
       const testQuestions = [
         {
           title: 'How to implement authentication in React?',
-          description: 'I want to add JWT authentication to my React app',
+          body: 'I want to add JWT authentication to my React app',
           author: testUser._id,
           views: 0,
-          upvotes: 0,
-          answers: 0,
+          upvotes: [],
+          answers: [],
           tags: ['React', 'Authentication']
         },
         {
           title: 'Best practices for MongoDB schemas?',
-          description: 'What are the best practices for designing MongoDB schemas?',
+          body: 'What are the best practices for designing MongoDB schemas?',
           author: testUser._id,
           views: 0,
-          upvotes: 0,
-          answers: 0,
+          upvotes: [],
+          answers: [],
           tags: ['MongoDB', 'Database']
         },
         {
           title: 'How to optimize React performance?',
-          description: 'Need tips on optimizing React component performance',
+          body: 'Need tips on optimizing React component performance',
           author: testUser._id,
           views: 0,
-          upvotes: 0,
-          answers: 0,
+          upvotes: [],
+          answers: [],
           tags: ['React', 'Performance']
         }
       ];
@@ -227,28 +227,34 @@ app.post('/api/seed', async (req, res) => {
           title: 'VisionX Community',
           description: 'A community platform for developers to share and learn',
           author: testUser._id,
-          github: 'https://github.com/example/visionx',
-          live: 'https://visionx.example.com',
-          tags: ['React', 'Node.js', 'MongoDB'],
-          upvotes: 0
+          githubLink: 'https://github.com/example/visionx',
+          liveLink: 'https://visionx.example.com',
+          techStack: ['React', 'Node.js', 'MongoDB'],
+          likes: [],
+          images: [],
+          comments: []
         },
         {
           title: 'Task Manager App',
           description: 'A simple task management application built with React',
           author: testUser._id,
-          github: 'https://github.com/example/task-manager',
-          live: 'https://task-manager.example.com',
-          tags: ['React', 'JavaScript'],
-          upvotes: 0
+          githubLink: 'https://github.com/example/task-manager',
+          liveLink: 'https://task-manager.example.com',
+          techStack: ['React', 'JavaScript'],
+          likes: [],
+          images: [],
+          comments: []
         },
         {
           title: 'Chat Application',
           description: 'Real-time chat application using WebSockets',
           author: testUser._id,
-          github: 'https://github.com/example/chat-app',
-          live: 'https://chat-app.example.com',
-          tags: ['Node.js', 'Socket.io', 'React'],
-          upvotes: 0
+          githubLink: 'https://github.com/example/chat-app',
+          liveLink: 'https://chat-app.example.com',
+          techStack: ['Node.js', 'Socket.io', 'React'],
+          likes: [],
+          images: [],
+          comments: []
         }
       ];
       await Project.insertMany(testProjects);
