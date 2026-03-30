@@ -1,20 +1,28 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+// Get API URL from environment or use production URL
+const API_URL = import.meta.env.VITE_BACKEND_URL 
+  ? `${import.meta.env.VITE_BACKEND_URL}/api`
+  : 'https://visionx-community-6fmh.onrender.com/api';
+
+console.log('🔐 Auth API_URL:', API_URL);
 
 // Register user
 export const register = createAsyncThunk(
   'auth/register',
   async (userData, { rejectWithValue }) => {
     try {
+      console.log('📝 Register attempt:', { url: `${API_URL}/auth/register`, email: userData.email });
       const response = await axios.post(`${API_URL}/auth/register`, userData);
+      console.log('✅ Register successful, token received');
       if (response.data) {
         localStorage.setItem('token', response.data.token);
       }
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data.msg);
+      console.error('❌ Register failed:', error.response?.data?.msg || error.message);
+      return rejectWithValue(error.response?.data?.msg || 'Registration failed');
     }
   }
 );
@@ -24,13 +32,16 @@ export const login = createAsyncThunk(
   'auth/login',
   async (userData, { rejectWithValue }) => {
     try {
+      console.log('🔐 Login attempt:', { url: `${API_URL}/auth/login`, email: userData.email });
       const response = await axios.post(`${API_URL}/auth/login`, userData);
+      console.log('✅ Login successful, token received');
       if (response.data) {
         localStorage.setItem('token', response.data.token);
       }
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data.msg);
+      console.error('❌ Login failed:', error.response?.data?.msg || error.message);
+      return rejectWithValue(error.response?.data?.msg || 'Login failed');
     }
   }
 );
