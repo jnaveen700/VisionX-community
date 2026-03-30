@@ -140,7 +140,19 @@ exports.login = async (req, res) => {
           throw err;
         }
         console.log('✅ [AUTH] JWT created successfully, token length:', token.length);
-        res.json({ token });
+        // Return both token and user data (same as register)
+        const userData = {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          points: user.points,
+          avatar: user.avatar,
+          bio: user.bio,
+          skills: user.skills,
+          badges: user.badges
+        };
+        res.json({ token, user: userData });
       }
     );
   } catch (err) {

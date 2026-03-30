@@ -29,7 +29,7 @@ function App() {
       console.log('🔐 Token found, restoring user data...');
       dispatch(getCurrentUser());
     }
-  }, []);
+  }, [token, dispatch]);
   
   useEffect(() => {
     console.log('✅ App mounted successfully');

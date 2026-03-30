@@ -50,17 +50,11 @@ export const login = createAsyncThunk(
       console.log('✅ Login successful, response:', response.data);
       if (response.data) {
         localStorage.setItem('token', response.data.token);
-        
-        // Fetch user data after login
-        const userResponse = await axios.get(`${API_URL}/auth/me`, {
-          headers: {
-            'x-auth-token': response.data.token
-          }
-        });
-        console.log('✅ User data fetched after login:', userResponse.data);
+        console.log('✅ Token saved to localStorage');
+        console.log('✅ User data from login response:', response.data.user);
         return {
           token: response.data.token,
-          user: userResponse.data
+          user: response.data.user || null
         };
       }
       return response.data;
