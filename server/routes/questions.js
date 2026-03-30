@@ -27,6 +27,16 @@ router.get('/:id', questionController.getQuestionById);
 // @access  Private
 router.post('/:id/answers', auth, questionController.addAnswer);
 
+// @route   PUT api/questions/:id/answers/:answerIndex/accept
+// @desc    Accept an answer (mark as correct)
+// @access  Private
+router.put('/:id/answers/accept', auth, questionController.acceptAnswer);
+
+// @route   PUT api/questions/:id/answers/:answerIndex/upvote
+// @desc    Upvote an answer
+// @access  Private
+router.put('/:id/answers/upvote', auth, questionController.upvoteAnswer);
+
 // @route   PUT api/questions/:id/upvote
 // @desc    Upvote a question
 // @access  Private

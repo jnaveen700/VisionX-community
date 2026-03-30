@@ -44,6 +44,18 @@ export const login = createAsyncThunk(
       console.log('✅ Login successful, response:', response.data);
       if (response.data) {
         localStorage.setItem('token', response.data.token);
+        
+        // Fetch user data after login
+        const userResponse = await axios.get(`${API_URL}/auth/me`, {
+          headers: {
+            'x-auth-token': response.data.token
+          }
+        });
+        console.log('✅ User data fetched after login:', userResponse.data);
+        return {
+          token: response.data.token,
+          user: userResponse.data
+        };
       }
       return response.data;
     } catch (error) {
@@ -106,6 +118,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = true;
         state.token = action.payload.token;
+        state.user = action.payload.user || null;
       })
       .addCase(register.rejected, (state, action) => {
         console.error('❌ Register rejected:', action.payload);
@@ -118,15 +131,16 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        console.log('✅ Login fulfilled:', { token: action.payload.token ? 'received' : 'missing' });
+        console.log('✅ Login fulfilled:', { token: action.payload.token ? 'received' : 'missing', user: action.payload.user });
         console.log('✅ Setting state.loading = false');
         console.log('✅ Setting state.isAuthenticated = true');
         console.log('✅ Setting state.token to:', action.payload.token?.substring(0, 20) + '...');
         state.loading = false;
         state.isAuthenticated = true;
         state.token = action.payload.token;
+        state.user = action.payload.user || null;
         state.error = null;
-        console.log('✅ State updated, new state:', { token: !!state.token, isAuthenticated: state.isAuthenticated, loading: state.loading });
+        console.log('✅ State updated, new state:', { token: !!state.token, isAuthenticated: state.isAuthenticated, user: !!state.user, loading: state.loading });
       })
       .addCase(login.rejected, (state, action) => {
         console.error('❌ Login rejected:', action.payload);

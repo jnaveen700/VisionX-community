@@ -57,7 +57,19 @@ exports.register = async (req, res) => {
           throw err;
         }
         console.log('✅ [AUTH] JWT created for registration');
-        res.json({ token });
+        // Return both token and user data
+        const userData = {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          points: user.points,
+          avatar: user.avatar,
+          bio: user.bio,
+          skills: user.skills,
+          badges: user.badges
+        };
+        res.json({ token, user: userData });
       }
     );
   } catch (err) {

@@ -6,7 +6,7 @@ function Navbar() {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { token, isAuthenticated } = useSelector(state => state.auth);
+  const { token, isAuthenticated, user } = useSelector(state => state.auth);
 
   console.log('🔍 [NAVBAR] Auth state:', { token: !!token, isAuthenticated });
   console.log('🔍 [NAVBAR] Token length:', token?.length || 0);
@@ -89,13 +89,26 @@ function Navbar() {
               </svg>
             </Link>
             
-            {token ? (
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-colors shadow-sm hover:shadow"
-              >
-                Logout
-              </button>
+            {token && user ? (
+              <div className="flex items-center space-x-3">
+                {/* Points Display */}
+                <Link
+                  to="/profile"
+                  className="flex items-center space-x-1 bg-gradient-to-r from-blue-50 to-purple-50 px-3 py-2 rounded-lg border border-blue-200 hover:border-blue-400 transition-colors"
+                >
+                  <span className="text-lg">⭐</span>
+                  <span className="font-bold text-blue-600">{user.points || 0}</span>
+                  <span className="text-xs text-gray-600">points</span>
+                </Link>
+                
+                {/* Logout Button */}
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-colors shadow-sm hover:shadow"
+                >
+                  Logout
+                </button>
+              </div>
             ) : (
               <Link
                 to="/login"

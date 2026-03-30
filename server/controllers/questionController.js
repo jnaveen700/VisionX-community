@@ -130,3 +130,85 @@ exports.upvoteQuestion = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.upvoteAnswer = async (req, res) => {
+  try {
+    const { answerIndex } = req.body;
+    const question = await Question.findById(req.params.id);
+
+    if (!question) {
+      return res.status(404).json({ msg: 'Question not found' });
+    }
+
+    if (answerIndex < 0 || answerIndex >= question.answers.length) {
+      return res.status(400).json({ msg: 'Answer not found' });
+    }
+
+    const answer = question.answers[answerIndex];
+
+    // Check if already upvoted
+    if (answer.upvotes.includes(req.user.id)) {
+      return res.status(400).json({ msg: 'Answer already upvoted' });
+    }
+
+    answer.upvotes.push(req.user.id);
+    await question.save();
+
+    // Award 2 points to answer author
+    await User.findByIdAndUpdate(answer.author, {
+      $inc: { points: 2 }
+    });
+
+    console.log(`⭐ User ${answer.author} earned 2 points for answer upvote`);
+    res.json(question.answers);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.acceptAnswer = async (req, res) => {
+  try {
+    const { answerIndex } = req.body;
+    const question = await Question.findById(req.params.id);
+
+    if (!question) {
+      return res.status(404).json({ msg: 'Question not found' });
+    }
+
+    // Only question author can accept answer
+    if (question.author.toString() !== req.user.id) {
+      return res.status(403).json({ msg: 'Only question author can accept answer' });
+    }
+
+    if (answerIndex < 0 || answerIndex >= question.answers.length) {
+      return res.status(400).json({ msg: 'Answer not found' });
+    }
+
+    const answer = question.answers[answerIndex];
+
+    // Check if already accepted
+    if (answer.isAccepted) {
+      return res.status(400).json({ msg: 'Answer already accepted' });
+    }
+
+    answer.isAccepted = true;
+    await question.save();
+
+    // Award 25 points to answer author (accepted answer)
+    await User.findByIdAndUpdate(answer.author, {
+      $inc: { points: 25 }
+    });
+
+    // Award 5 bonus points to question author for accepting answer
+    await User.findByIdAndUpdate(question.author, {
+      $inc: { points: 5 }
+    });
+
+    console.log(`✅ Answer accepted! ${answer.author} earned 25 points, ${question.author} earned 5 bonus points`);
+    res.json(question.answers);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
