@@ -156,35 +156,111 @@ app.post('/api/seed', async (req, res) => {
   try {
     console.log('🌱 Seeding database with test data...');
     const User = require('./models/User');
+    const Question = require('./models/Question');
+    const Project = require('./models/Project');
     const bcrypt = require('bcryptjs');
     
-    // Check if test user already exists
-    const existingUser = await User.findOne({ email: 'test@aits.edu' });
-    if (existingUser) {
-      return res.json({ msg: 'Test user already exists', email: 'test@aits.edu', password: 'test123' });
+    // Create test user
+    let testUser = await User.findOne({ email: 'test@aits.edu' });
+    if (!testUser) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash('test123', salt);
+      
+      testUser = new User({
+        name: 'Test User',
+        email: 'test@aits.edu',
+        password: hashedPassword,
+        bio: 'Test user for VisionX',
+        skills: ['React', 'Node.js', 'MongoDB'],
+        role: 'beginner',
+        points: 0
+      });
+      await testUser.save();
+      console.log('✅ Test user created:', testUser.email);
+    } else {
+      console.log('✅ Test user already exists');
     }
     
-    // Create test user
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash('test123', salt);
+    // Create test questions
+    const existingQuestions = await Question.countDocuments();
+    if (existingQuestions === 0) {
+      const testQuestions = [
+        {
+          title: 'How to implement authentication in React?',
+          description: 'I want to add JWT authentication to my React app',
+          author: testUser._id,
+          views: 0,
+          upvotes: 0,
+          answers: 0,
+          tags: ['React', 'Authentication']
+        },
+        {
+          title: 'Best practices for MongoDB schemas?',
+          description: 'What are the best practices for designing MongoDB schemas?',
+          author: testUser._id,
+          views: 0,
+          upvotes: 0,
+          answers: 0,
+          tags: ['MongoDB', 'Database']
+        },
+        {
+          title: 'How to optimize React performance?',
+          description: 'Need tips on optimizing React component performance',
+          author: testUser._id,
+          views: 0,
+          upvotes: 0,
+          answers: 0,
+          tags: ['React', 'Performance']
+        }
+      ];
+      await Question.insertMany(testQuestions);
+      console.log('✅ Test questions created:', testQuestions.length);
+    } else {
+      console.log('✅ Questions already exist');
+    }
     
-    const testUser = new User({
-      name: 'Test User',
-      email: 'test@aits.edu',
-      password: hashedPassword,
-      bio: 'Test user for VisionX',
-      skills: ['React', 'Node.js', 'MongoDB'],
-      role: 'beginner',
-      points: 0
-    });
-    
-    await testUser.save();
-    console.log('✅ Test user created:', testUser.email);
+    // Create test projects
+    const existingProjects = await Project.countDocuments();
+    if (existingProjects === 0) {
+      const testProjects = [
+        {
+          title: 'VisionX Community',
+          description: 'A community platform for developers to share and learn',
+          author: testUser._id,
+          github: 'https://github.com/example/visionx',
+          live: 'https://visionx.example.com',
+          tags: ['React', 'Node.js', 'MongoDB'],
+          upvotes: 0
+        },
+        {
+          title: 'Task Manager App',
+          description: 'A simple task management application built with React',
+          author: testUser._id,
+          github: 'https://github.com/example/task-manager',
+          live: 'https://task-manager.example.com',
+          tags: ['React', 'JavaScript'],
+          upvotes: 0
+        },
+        {
+          title: 'Chat Application',
+          description: 'Real-time chat application using WebSockets',
+          author: testUser._id,
+          github: 'https://github.com/example/chat-app',
+          live: 'https://chat-app.example.com',
+          tags: ['Node.js', 'Socket.io', 'React'],
+          upvotes: 0
+        }
+      ];
+      await Project.insertMany(testProjects);
+      console.log('✅ Test projects created:', testProjects.length);
+    } else {
+      console.log('✅ Projects already exist');
+    }
     
     res.json({ 
-      msg: 'Database seeded with test user',
-      email: 'test@aits.edu',
-      password: 'test123'
+      msg: 'Database seeded with test data',
+      user: { email: 'test@aits.edu', password: 'test123' },
+      data: { questionsCount: await Question.countDocuments(), projectsCount: await Project.countDocuments() }
     });
   } catch (err) {
     console.error('❌ Seed error:', err.message);
