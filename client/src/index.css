@@ -64,7 +64,7 @@
   /* Buttons with touch-friendly targets (min 44px) */
   .btn {
     @apply px-4 py-3 sm:py-2 rounded-md font-medium transition-all duration-200 inline-flex items-center justify-center;
-    @apply min-h-[44px] sm:min-h-auto;
+    @apply min-h-[44px] sm:min-h-0;
     @apply text-base sm:text-sm;
   }
   
