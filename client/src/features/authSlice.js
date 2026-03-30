@@ -31,16 +31,25 @@ export const register = createAsyncThunk(
 export const login = createAsyncThunk(
   'auth/login',
   async (userData, { rejectWithValue }) => {
+    console.log('🔐 LOGIN THUNK STARTED');
+    console.log('🔐 API_URL being used:', API_URL);
+    console.log('🔐 userData:', userData);
+    
     try {
-      console.log('🔐 Login attempt:', { url: `${API_URL}/auth/login`, email: userData.email });
-      const response = await axios.post(`${API_URL}/auth/login`, userData);
-      console.log('✅ Login successful, token received');
+      console.log('🔐 About to make axios POST request...');
+      const loginUrl = `${API_URL}/auth/login`;
+      console.log('🔐 Full login URL:', loginUrl);
+      
+      const response = await axios.post(loginUrl, userData);
+      console.log('✅ Login successful, response:', response.data);
       if (response.data) {
         localStorage.setItem('token', response.data.token);
       }
       return response.data;
     } catch (error) {
-      console.error('❌ Login failed:', error.response?.data?.msg || error.message);
+      console.error('❌ Login axios error caught');
+      console.error('❌ Error response:', error.response);
+      console.error('❌ Error message:', error.message);
       return rejectWithValue(error.response?.data?.msg || 'Login failed');
     }
   }
