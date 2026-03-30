@@ -28,12 +28,13 @@ api.interceptors.request.use(
             method: config.method.toUpperCase(),
             url: config.url,
             fullUrl: config.baseURL + config.url,
-            headers: config.headers
         });
         const token = localStorage.getItem('token');
         if (token) {
-            config.headers['Authorization'] = `Bearer ${token}`;
-            console.log('🔑 Token attached');
+            config.headers['x-auth-token'] = token;
+            console.log('🔑 Token (x-auth-token) attached, length:', token.length);
+        } else {
+            console.log('⚠️ No token found in localStorage');
         }
         return config;
     },

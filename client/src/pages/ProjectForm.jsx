@@ -26,7 +26,11 @@ function ProjectForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('📤 [PROJECT FORM] Submit button clicked');
+    console.log('📤 [PROJECT FORM] Token present?', !!token);
+    
     if (!token) {
+      console.error('❌ [PROJECT FORM] No token, cannot submit');
       setError('You must be logged in to share a project');
       return;
     }
@@ -40,6 +44,12 @@ function ProjectForm() {
         .map(tech => tech.trim())
         .filter(tech => tech.length > 0);
 
+      console.log('📤 [PROJECT FORM] Submitting project:', { 
+        title: formData.title, 
+        descLength: formData.description.length,
+        techCount: techStackArray.length 
+      });
+
       const response = await api.post('/projects', {
         title: formData.title,
         description: formData.description,
@@ -48,11 +58,15 @@ function ProjectForm() {
         techStack: techStackArray
       });
 
-      console.log('✅ Project created:', response.data);
+      console.log('✅ [PROJECT FORM] Project created:', response.data);
       navigate(`/projects/${response.data._id}`);
     } catch (err) {
-      console.error('❌ Failed to create project:', err.message);
-      setError(err.response?.data?.msg || err.message);
+      console.error('❌ [PROJECT FORM] Submission failed');
+      console.error('   Error message:', err.message);
+      console.error('   Error response:', err.response?.data);
+      console.error('   Error status:', err.response?.status);
+      console.error('   Full error:', err);
+      setError(err.response?.data?.msg || err.response?.data?.error || err.message || 'Failed to create project');
       setLoading(false);
     }
   };

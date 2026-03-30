@@ -24,7 +24,11 @@ function QuestionForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('📤 [QUESTION FORM] Submit button clicked');
+    console.log('📤 [QUESTION FORM] Token present?', !!token);
+    
     if (!token) {
+      console.error('❌ [QUESTION FORM] No token, redirecting to login');
       setError('You must be logged in to ask a question');
       return;
     }
@@ -38,17 +42,27 @@ function QuestionForm() {
         .map(tag => tag.trim())
         .filter(tag => tag.length > 0);
 
+      console.log('📤 [QUESTION FORM] Submitting question:', { 
+        title: formData.title, 
+        bodyLength: formData.body.length,
+        tagsCount: tagsArray.length 
+      });
+
       const response = await api.post('/questions', {
         title: formData.title,
         body: formData.body,
         tags: tagsArray
       });
 
-      console.log('✅ Question created:', response.data);
+      console.log('✅ [QUESTION FORM] Question created:', response.data);
       navigate(`/questions/${response.data._id}`);
     } catch (err) {
-      console.error('❌ Failed to create question:', err.message);
-      setError(err.response?.data?.msg || err.message);
+      console.error('❌ [QUESTION FORM] Submission failed');
+      console.error('   Error message:', err.message);
+      console.error('   Error response:', err.response?.data);
+      console.error('   Error status:', err.response?.status);
+      console.error('   Full error:', err);
+      setError(err.response?.data?.msg || err.response?.data?.error || err.message || 'Failed to create question');
       setLoading(false);
     }
   };
