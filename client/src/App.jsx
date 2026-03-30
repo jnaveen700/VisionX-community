@@ -1,5 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getCurrentUser } from './features/authSlice.js'
 import Home from './pages/Home.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
@@ -14,9 +16,20 @@ import Resources from './pages/Resources.jsx'
 import Navbar from './components/Navbar.jsx'
 
 function App() {
+  const dispatch = useDispatch()
+  const { token } = useSelector(state => state.auth)
+  
   // Log on app load
   console.log('%c🚀 VisionX App Started', 'color: #ff6b6b; font-weight: bold; font-size: 14px;');
   console.log('Build time:', new Date().toLocaleString());
+  
+  // Restore user data on app load if token exists
+  useEffect(() => {
+    if (token) {
+      console.log('🔐 Token found, restoring user data...');
+      dispatch(getCurrentUser());
+    }
+  }, []);
   
   useEffect(() => {
     console.log('✅ App mounted successfully');
