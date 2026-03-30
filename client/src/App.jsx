@@ -34,32 +34,34 @@ function App() {
   }, []);
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex flex-col">
       <Navbar />
-      <main className="min-h-[calc(100vh-64px)] py-8 px-4">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/questions/new" element={<QuestionForm />} />
-          <Route path="/questions/:id" element={<QuestionDetail />} />
-          <Route path="/questions" element={<Questions />} />
-          <Route path="/projects/new" element={<ProjectForm />} />
-          <Route path="/projects/:id" element={<ProjectDetail />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/resources" element={<Resources />} />
-        </Routes>
+      <main className="flex-1 w-full py-6 sm:py-8 px-4 sm:px-6 lg:px-8">
+        <div className="container-responsive">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/questions/new" element={<QuestionForm />} />
+            <Route path="/questions/:id" element={<QuestionDetail />} />
+            <Route path="/questions" element={<Questions />} />
+            <Route path="/projects/new" element={<ProjectForm />} />
+            <Route path="/projects/:id" element={<ProjectDetail />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/resources" element={<Resources />} />
+          </Routes>
+        </div>
       </main>
-      <footer className="bg-white border-t border-gray-100 py-6">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center justify-center space-y-4">
-            <p className="text-gray-600 text-sm">
+      <footer className="bg-white border-t border-gray-100 py-6 sm:py-8 w-full">
+        <div className="container-responsive">
+          <div className="flex flex-col items-center justify-center gap-4 sm:gap-6">
+            <p className="text-gray-600 text-sm sm:text-base text-center">
               VisionX Community • {new Date().getFullYear()}
             </p>
-            <div className="flex space-x-6">
-              <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors">About</a>
-              <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors">Contact</a>
-              <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors">Privacy</a>
+            <div className="flex flex-wrap gap-4 sm:gap-6 justify-center">
+              <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors text-sm sm:text-base">About</a>
+              <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors text-sm sm:text-base">Contact</a>
+              <a href="#" className="text-gray-400 hover:text-gray-600 transition-colors text-sm sm:text-base">Privacy</a>
             </div>
           </div>
         </div>

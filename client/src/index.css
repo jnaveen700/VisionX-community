@@ -3,42 +3,138 @@
 @tailwind utilities;
 
 @layer base {
+  /* Mobile-first typography */
+  html {
+    font-size: 16px;
+  }
+
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Responsive typography using clamp() */
+  h1 {
+    @apply font-bold;
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    line-height: 1.2;
+    margin-bottom: 1em;
+  }
+
+  h2 {
+    @apply font-bold;
+    font-size: clamp(1.25rem, 4vw, 2rem);
+    line-height: 1.3;
+    margin-bottom: 0.8em;
+  }
+
+  h3 {
+    @apply font-bold;
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    line-height: 1.4;
+    margin-bottom: 0.6em;
+  }
+
+  p {
+    margin-bottom: 1em;
+    max-width: 65ch;
+  }
+
+  /* Touch-friendly link targets */
+  a {
+    @apply relative;
+  }
+
+  /* Remove default focus outline and add custom one */
+  :focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
   }
 }
 
 @layer components {
+  /* Cards with responsive padding */
   .card {
-    @apply bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100 p-6;
+    @apply bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100;
+    @apply p-4 sm:p-6;
   }
   
+  /* Buttons with touch-friendly targets (min 44px) */
   .btn {
-    @apply px-4 py-2 rounded-md font-medium transition-all duration-200;
+    @apply px-4 py-3 sm:py-2 rounded-md font-medium transition-all duration-200 inline-flex items-center justify-center;
+    @apply min-h-[44px] sm:min-h-auto;
+    @apply text-base sm:text-sm;
   }
   
   .btn-primary {
-    @apply bg-blue-500 text-white hover:bg-blue-600 shadow-sm hover:shadow;
+    @apply bg-blue-500 text-white hover:bg-blue-600 shadow-sm hover:shadow active:scale-95;
   }
   
   .btn-secondary {
-    @apply bg-gray-100 text-gray-700 hover:bg-gray-200;
-  }
-  
-  .nav-link {
-    @apply text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium;
+    @apply bg-gray-100 text-gray-700 hover:bg-gray-200 active:scale-95;
   }
 
+  /* Responsive nav links */
+  .nav-link {
+    @apply px-3 py-2 rounded-md font-medium transition-colors;
+    @apply text-base sm:text-sm;
+    @apply min-h-[44px] sm:min-h-auto flex items-center;
+  }
+
+  /* Responsive inputs with touch-friendly sizing */
   .input {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500;
+    @apply w-full px-4 py-3 sm:py-2 border border-gray-300 rounded-md;
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+    @apply text-base sm:text-sm;
+    @apply min-h-[44px] sm:min-h-auto;
+  }
+
+  /* Responsive container */
+  .container-responsive {
+    @apply w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 }
 
-/* Simple animations that a student might add */
+/* Animations for better UX */
 .hover-scale {
-  transition: transform 0.2s;
+  transition: transform 0.2s ease-in-out;
 }
 
 .hover-scale:hover {
   transform: scale(1.02);
+}
+
+.hover-scale:active {
+  transform: scale(0.98);
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prevent horizontal scrolling */
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Responsive images */
+img {
+  @apply max-w-full h-auto;
+  display: block;
+}
+
+/* Responsive grid helpers */
+.grid-responsive {
+  @apply grid gap-4 sm:gap-6;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+}
+
+/* Responsive flex */
+.flex-responsive {
+  @apply flex flex-col sm:flex-row gap-4 sm:gap-6;
 }
