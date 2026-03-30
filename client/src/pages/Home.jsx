@@ -1,7 +1,19 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 function Home() {
   const navigate = useNavigate();
+  const { token, isAuthenticated } = useSelector(state => state.auth);
+
+  useEffect(() => {
+    const localToken = localStorage.getItem('token');
+    console.log('🏠 [HOME PAGE] Auth State Check:');
+    console.log('   Redux token:', !!token);
+    console.log('   Redux isAuthenticated:', isAuthenticated);
+    console.log('   localStorage token:', !!localToken);
+    console.log('   Token length:', token?.length || 0);
+  }, [token, isAuthenticated]);
   
   const handleAskQuestion = () => {
     console.log('🔘 Ask a Question clicked');
@@ -15,6 +27,33 @@ function Home() {
   
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
+      {/* DEBUG PANEL */}
+      <div className="mb-6 p-4 bg-yellow-50 border-2 border-yellow-400 rounded-lg">
+        <h3 className="font-bold text-yellow-900 mb-2">🔍 Debug: Authentication Status</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+          <div>
+            <span className="font-semibold text-yellow-900">Token Present:</span>
+            <br />
+            <span className={token ? '✅ YES' : '❌ NO'}>{token ? 'Yes' : 'No'}</span>
+          </div>
+          <div>
+            <span className="font-semibold text-yellow-900">IsAuthenticated:</span>
+            <br />
+            <span className={isAuthenticated ? '✅ YES' : '❌ NO'}>{isAuthenticated ? 'Yes' : 'No'}</span>
+          </div>
+          <div>
+            <span className="font-semibold text-yellow-900">Token Length:</span>
+            <br />
+            <span className="text-yellow-800">{token?.length || 0} chars</span>
+          </div>
+          <div>
+            <span className="font-semibold text-yellow-900">LocalStorage Token:</span>
+            <br />
+            <span className={localStorage.getItem('token') ? '✅ YES' : '❌ NO'}>{localStorage.getItem('token') ? 'Yes' : 'No'}</span>
+          </div>
+        </div>
+      </div>
+
       <div className="text-center mb-16 bg-gradient-to-b from-white to-gray-50 p-10 rounded-xl shadow-md border border-gray-100 transform hover:-translate-y-1 transition-all duration-300">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6 leading-tight">

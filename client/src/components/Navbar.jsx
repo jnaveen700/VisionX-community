@@ -9,6 +9,8 @@ function Navbar() {
   const { token, isAuthenticated } = useSelector(state => state.auth);
 
   console.log('🔍 [NAVBAR] Auth state:', { token: !!token, isAuthenticated });
+  console.log('🔍 [NAVBAR] Token length:', token?.length || 0);
+  console.log('🔍 [NAVBAR] LocalStorage token:', !!localStorage.getItem('token'));
   
   const isActive = (path) => {
     return location.pathname === path;
