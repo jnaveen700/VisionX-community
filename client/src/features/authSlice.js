@@ -13,7 +13,12 @@ export const register = createAsyncThunk(
   'auth/register',
   async (userData, { rejectWithValue }) => {
     try {
-      console.log('📝 Register attempt:', { url: `${API_URL}/auth/register`, email: userData.email });
+      console.log('📝 Register attempt:', { 
+        url: `${API_URL}/auth/register`,
+        name: userData.name,
+        email: userData.email,
+        password: userData.password ? '***' : 'MISSING'
+      });
       const response = await axios.post(`${API_URL}/auth/register`, userData);
       console.log('✅ Register successful, token received');
       if (response.data) {
@@ -22,6 +27,7 @@ export const register = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.error('❌ Register failed:', error.response?.data?.msg || error.message);
+      console.error('❌ Error details:', error.response?.data);
       return rejectWithValue(error.response?.data?.msg || 'Registration failed');
     }
   }

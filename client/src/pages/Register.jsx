@@ -18,6 +18,12 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('📝 [REGISTER] Form submitted');
+    console.log('📝 [REGISTER] Form data:', { 
+      name: formData.name, 
+      email: formData.email,
+      password: formData.password ? '***' : 'MISSING',
+      confirmPassword: formData.confirmPassword ? '***' : 'MISSING'
+    });
     
     if (formData.password !== formData.confirmPassword) {
       alert('Passwords do not match!');
