@@ -167,13 +167,3 @@ function QuestionForm() {
 }
 
 export default QuestionForm;
-              Cancel
-            </Link>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-export default QuestionForm;

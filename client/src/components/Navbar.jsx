@@ -235,15 +235,3 @@ function Navbar() {
 }
 
 export default Navbar;
-              >
-                Sign In
-              </Link>
-            )}
-          </div>
-        </div>
-      </div>
-    </nav>
-  );
-}
-
-export default Navbar;
