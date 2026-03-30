@@ -6,11 +6,16 @@ const config = require('../config'); // Use config as fallback
 
 exports.register = async (req, res) => {
   try {
+    console.log('📝 [AUTH] Register request received');
+    console.log('📝 [AUTH] Email:', req.body.email);
+    
     const { name, email, password } = req.body;
 
     // Check if user exists
+    console.log('🔍 [AUTH] Checking if user exists:', email);
     let user = await User.findOne({ email });
     if (user) {
+      console.warn('⚠️ [AUTH] User already exists:', email);
       return res.status(400).json({ msg: 'User already exists' });
     }
 
@@ -27,6 +32,7 @@ exports.register = async (req, res) => {
 
     // Save user
     await user.save();
+    console.log('✅ [AUTH] User created:', user._id);
 
     // Return JWT
     const payload = {
@@ -35,37 +41,55 @@ exports.register = async (req, res) => {
       }
     };
 
+    const secret = process.env.JWT_SECRET || config.jwtSecret;
+    const expiresIn = process.env.JWT_EXPIRATION || config.jwtExpiration;
+    
+    console.log('🔑 [AUTH] Creating JWT for new user');
+    
     // Use process.env if available, fallback to config
     jwt.sign(
       payload,
-      process.env.JWT_SECRET || config.jwtSecret,
-      { expiresIn: process.env.JWT_EXPIRATION || config.jwtExpiration },
+      secret,
+      { expiresIn },
       (err, token) => {
-        if (err) throw err;
+        if (err) {
+          console.error('❌ [AUTH] JWT creation failed:', err);
+          throw err;
+        }
+        console.log('✅ [AUTH] JWT created for registration');
         res.json({ token });
       }
     );
   } catch (err) {
-    console.error(err.message);
+    console.error('❌ [AUTH] Register error:', err.message);
     res.status(500).send('Server error');
   }
 };
 
 exports.login = async (req, res) => {
   try {
+    console.log('🔐 [AUTH] Login request received');
+    console.log('🔐 [AUTH] Email:', req.body.email);
+    
     const { email, password } = req.body;
 
     // Check if user exists
+    console.log('🔍 [AUTH] Looking for user with email:', email);
     let user = await User.findOne({ email });
+    
     if (!user) {
+      console.warn('⚠️ [AUTH] User not found:', email);
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
+    console.log('✅ [AUTH] User found:', user._id);
 
     // Validate password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.warn('❌ [AUTH] Password mismatch for user:', email);
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
+    console.log('✅ [AUTH] Password verified');
 
     // Return JWT
     const payload = {
@@ -75,17 +99,26 @@ exports.login = async (req, res) => {
     };
 
     // Use process.env if available, fallback to config
+    const secret = process.env.JWT_SECRET || config.jwtSecret;
+    const expiresIn = process.env.JWT_EXPIRATION || config.jwtExpiration;
+    
+    console.log('🔑 [AUTH] Creating JWT with expiration:', expiresIn);
+    
     jwt.sign(
       payload,
-      process.env.JWT_SECRET || config.jwtSecret,
-      { expiresIn: process.env.JWT_EXPIRATION || config.jwtExpiration },
+      secret,
+      { expiresIn },
       (err, token) => {
-        if (err) throw err;
+        if (err) {
+          console.error('❌ [AUTH] JWT creation failed:', err);
+          throw err;
+        }
+        console.log('✅ [AUTH] JWT created successfully, token length:', token.length);
         res.json({ token });
       }
     );
   } catch (err) {
-    console.error(err.message);
+    console.error('❌ [AUTH] Login error:', err.message);
     res.status(500).send('Server error');
   }
 };

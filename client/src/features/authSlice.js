@@ -89,38 +89,49 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(register.pending, (state) => {
+        console.log('⏳ Register pending');
         state.loading = true;
       })
       .addCase(register.fulfilled, (state, action) => {
+        console.log('✅ Register fulfilled:', action.payload);
         state.loading = false;
         state.isAuthenticated = true;
         state.token = action.payload.token;
       })
       .addCase(register.rejected, (state, action) => {
+        console.error('❌ Register rejected:', action.payload);
         state.loading = false;
         state.error = action.payload;
       })
       .addCase(login.pending, (state) => {
+        console.log('⏳ Login pending');
         state.loading = true;
+        state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
+        console.log('✅ Login fulfilled:', { token: action.payload.token ? 'received' : 'missing' });
         state.loading = false;
         state.isAuthenticated = true;
         state.token = action.payload.token;
+        state.error = null;
       })
       .addCase(login.rejected, (state, action) => {
+        console.error('❌ Login rejected:', action.payload);
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || 'Login failed';
       })
       .addCase(getCurrentUser.pending, (state) => {
+        console.log('⏳ GetCurrentUser pending');
         state.loading = true;
       })
       .addCase(getCurrentUser.fulfilled, (state, action) => {
+        console.log('✅ GetCurrentUser fulfilled');
         state.loading = false;
         state.isAuthenticated = true;
         state.user = action.payload;
       })
       .addCase(getCurrentUser.rejected, (state, action) => {
+        console.error('❌ GetCurrentUser rejected:', action.payload);
         state.loading = false;
         state.error = action.payload;
       });

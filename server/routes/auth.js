@@ -3,6 +3,14 @@ const router = express.Router();
 const authController = require('../controllers/authController');
 const auth = require('../middleware/auth');
 
+// @route   GET api/auth/test
+// @desc    Test auth endpoint
+// @access  Public
+router.get('/test', (req, res) => {
+  console.log('✅ Auth test endpoint hit');
+  res.json({ msg: 'Auth endpoint is working' });
+});
+
 // @route   POST api/auth/register
 // @desc    Register user
 // @access  Public

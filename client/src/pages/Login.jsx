@@ -15,13 +15,28 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await dispatch(login(formData));
-    if (!result.error) {
-      navigate('/');
+    console.log('🔐 [LOGIN] Form submitted');
+    console.log('🔐 [LOGIN] Form data:', { email: formData.email, passwordLength: formData.password.length });
+    
+    try {
+      const result = await dispatch(login(formData));
+      console.log('🔐 [LOGIN] Dispatch result:', result);
+      console.log('🔐 [LOGIN] Result payload:', result.payload);
+      console.log('🔐 [LOGIN] Result error:', result.error);
+      
+      if (result.payload && result.payload.token) {
+        console.log('✅ [LOGIN] Token received, redirecting to home');
+        navigate('/');
+      } else {
+        console.error('❌ [LOGIN] No token in response:', result);
+      }
+    } catch (err) {
+      console.error('❌ [LOGIN] Exception during login:', err);
     }
   };
 
   const handleChange = (e) => {
+    console.log('📝 [LOGIN] Field changed:', e.target.name, '=', e.target.value);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -43,6 +58,13 @@ function Login() {
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
             {error}
+            {console.log('❌ [LOGIN] Error displayed:', error)}
+          </div>
+        )}
+
+        {loading && (
+          <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded">
+            Loading...
           </div>
         )}
 
