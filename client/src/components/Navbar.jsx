@@ -31,10 +31,7 @@ function Navbar() {
             <span className="text-2xl font-bold bg-gradient-to-r from-red-600 to-purple-600 bg-clip-text text-transparent">
               VisionX
             </span>
-            <div className="flex flex-col">
-              <span className="text-gray-600">Community</span>
-              <span className="text-xs text-gray-500">Made by Team Akatsuki</span>
-            </div>
+            <span className="text-gray-600">Community</span>
           </Link>
 
           {/* Navigation Links */}
