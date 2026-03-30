@@ -11,7 +11,11 @@ router.post('/', auth, questionController.createQuestion);
 // @route   GET api/questions
 // @desc    Get all questions
 // @access  Public
-router.get('/', questionController.getAllQuestions);
+router.get('/', (req, res, next) => {
+  console.log('📋 GET /questions - Route hit');
+  console.log('Headers:', req.headers);
+  next();
+}, questionController.getAllQuestions);
 
 // @route   GET api/questions/:id
 // @desc    Get question by ID

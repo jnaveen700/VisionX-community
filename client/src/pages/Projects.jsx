@@ -9,11 +9,21 @@ function Projects() {
 
   useEffect(() => {
     const fetchProjects = async () => {
+      console.log('%c📦 Projects: Starting fetch', 'color: purple; font-weight: bold;');
       try {
+        console.log('Fetching from endpoint: /projects');
         const response = await api.get('/projects');
+        console.log('%c✅ Projects: Fetch successful', 'color: green; font-weight: bold;', {
+          count: response.data.length,
+          data: response.data
+        });
         setProjects(response.data);
         setLoading(false);
       } catch (err) {
+        console.error('%c❌ Projects: Fetch failed', 'color: red; font-weight: bold;', {
+          error: err.message,
+          errorObject: err
+        });
         setError(err.message);
         setLoading(false);
       }

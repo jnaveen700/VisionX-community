@@ -9,11 +9,21 @@ function Questions() {
 
   useEffect(() => {
     const fetchQuestions = async () => {
+      console.log('%c📄 Questions: Starting fetch', 'color: purple; font-weight: bold;');
       try {
+        console.log('Fetching from endpoint: /questions');
         const response = await api.get('/questions');
+        console.log('%c✅ Questions: Fetch successful', 'color: green; font-weight: bold;', {
+          count: response.data.length,
+          data: response.data
+        });
         setQuestions(response.data);
         setLoading(false);
       } catch (err) {
+        console.error('%c❌ Questions: Fetch failed', 'color: red; font-weight: bold;', {
+          error: err.message,
+          errorObject: err
+        });
         setError(err.message);
         setLoading(false);
       }

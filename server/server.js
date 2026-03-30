@@ -43,6 +43,14 @@ app.use(cors({
 
 app.use(express.json());
 
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`\n🌐 ${req.method} ${req.path}`);
+  console.log('Origin:', req.get('origin'));
+  console.log('Host:', req.get('host'));
+  next();
+});
+
 // Basic route to test if server is running
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });

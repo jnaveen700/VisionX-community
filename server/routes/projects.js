@@ -11,7 +11,11 @@ router.post('/', auth, projectController.createProject);
 // @route   GET api/projects
 // @desc    Get all projects
 // @access  Public
-router.get('/', projectController.getAllProjects);
+router.get('/', (req, res, next) => {
+  console.log('📦 GET /projects - Route hit');
+  console.log('Headers:', req.headers);
+  next();
+}, projectController.getAllProjects);
 
 // @route   GET api/projects/:id
 // @desc    Get project by ID

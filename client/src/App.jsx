@@ -6,6 +6,9 @@ import Resources from './pages/Resources.jsx'
 import Navbar from './components/Navbar.jsx'
 
 function App() {
+  // Log on app load
+  console.log('%c🚀 VisionX App Started', 'color: #ff6b6b; font-weight: bold; font-size: 14px;');
+  console.log('Build time:', new Date().toLocaleString());
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       <Navbar />

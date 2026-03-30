@@ -28,14 +28,16 @@ exports.createQuestion = async (req, res) => {
 
 exports.getAllQuestions = async (req, res) => {
   try {
+    console.log('🔍 getAllQuestions controller called');
     const questions = await Question.find()
       .sort({ createdAt: -1 })
       .populate('author', 'name avatar')
       .populate('answers.author', 'name avatar');
+    console.log(`✅ Found ${questions.length} questions`);
     res.json(questions);
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+    console.error('❌ getAllQuestions error:', err.message);
+    res.status(500).json({ error: 'Server error', message: err.message });
   }
 };
 

@@ -30,13 +30,15 @@ exports.createProject = async (req, res) => {
 
 exports.getAllProjects = async (req, res) => {
   try {
+    console.log('🔍 getAllProjects controller called');
     const projects = await Project.find()
       .sort({ createdAt: -1 })
       .populate('author', 'name avatar');
+    console.log(`✅ Found ${projects.length} projects`);
     res.json(projects);
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+    console.error('❌ getAllProjects error:', err.message);
+    res.status(500).json({ error: 'Server error', message: err.message });
   }
 };
 
