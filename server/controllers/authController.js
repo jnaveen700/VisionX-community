@@ -11,6 +11,12 @@ exports.register = async (req, res) => {
     
     const { name, email, password } = req.body;
 
+    // Validate required fields
+    if (!name || !email || !password) {
+      console.warn('⚠️ [AUTH] Missing required fields');
+      return res.status(400).json({ msg: 'Please provide name, email, and password' });
+    }
+
     // Check if user exists
     console.log('🔍 [AUTH] Checking if user exists:', email);
     let user = await User.findOne({ email });
@@ -74,7 +80,15 @@ exports.register = async (req, res) => {
     );
   } catch (err) {
     console.error('❌ [AUTH] Register error:', err.message);
-    res.status(500).send('Server error');
+    // Return more specific error messages
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json({ msg: messages.join(', ') });
+    }
+    if (err.code === 11000) {
+      return res.status(400).json({ msg: 'Email already registered' });
+    }
+    res.status(500).json({ msg: 'Server error during registration' });
   }
 };
 
