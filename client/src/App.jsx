@@ -4,7 +4,11 @@ import Home from './pages/Home.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import Questions from './pages/Questions.jsx'
+import QuestionDetail from './pages/QuestionDetail.jsx'
+import QuestionForm from './pages/QuestionForm.jsx'
 import Projects from './pages/Projects.jsx'
+import ProjectDetail from './pages/ProjectDetail.jsx'
+import ProjectForm from './pages/ProjectForm.jsx'
 import Resources from './pages/Resources.jsx'
 import Navbar from './components/Navbar.jsx'
 
@@ -37,7 +41,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/questions/new" element={<QuestionForm />} />
+          <Route path="/questions/:id" element={<QuestionDetail />} />
           <Route path="/questions" element={<Questions />} />
+          <Route path="/projects/new" element={<ProjectForm />} />
+          <Route path="/projects/:id" element={<ProjectDetail />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/resources" element={<Resources />} />
         </Routes>
