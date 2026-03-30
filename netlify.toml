@@ -5,7 +5,4 @@
 
 [build.environment]
   NODE_VERSION = "22"
-
-[env.production]
-  [env.production.environment]
-    VITE_BACKEND_URL = "https://visionx-community-6fmh.onrender.com"
+  VITE_BACKEND_URL = "https://visionx-community-6fmh.onrender.com"
