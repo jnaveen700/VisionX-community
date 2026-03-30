@@ -1,0 +1,8 @@
+[build]
+  base = "client"
+  command = "npm install && npm run build"
+  publish = "dist"
+
+[env.production]
+  [env.production.environment]
+    VITE_BACKEND_URL = "https://visionx-community-6fmh.onrender.com"
