@@ -1,6 +1,18 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Home() {
+  const navigate = useNavigate();
+  
+  const handleAskQuestion = () => {
+    console.log('🔘 Ask a Question clicked');
+    navigate('/questions');
+  };
+  
+  const handleShareProject = () => {
+    console.log('🔘 Share Project clicked');
+    navigate('/projects');
+  };
+  
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="text-center mb-16 bg-gradient-to-b from-white to-gray-50 p-10 rounded-xl shadow-md border border-gray-100 transform hover:-translate-y-1 transition-all duration-300">
@@ -15,10 +27,16 @@ function Home() {
             A safe space for developers to learn, share, and grow together
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+            <button 
+              onClick={handleAskQuestion}
+              className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 cursor-pointer"
+            >
               Ask a Question
             </button>
-            <button className="bg-white text-gray-700 px-8 py-3 rounded-lg font-medium hover:bg-gray-50 transition-all duration-200 shadow-md hover:shadow-lg border border-gray-200 transform hover:-translate-y-0.5">
+            <button 
+              onClick={handleShareProject}
+              className="bg-white text-gray-700 px-8 py-3 rounded-lg font-medium hover:bg-gray-50 transition-all duration-200 shadow-md hover:shadow-lg border border-gray-200 transform hover:-translate-y-0.5 cursor-pointer"
+            >
               Share Project
             </button>
           </div>

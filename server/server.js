@@ -151,9 +151,50 @@ app.use('/api/projects', (req, res, next) => {
   next();
 });
 
+// --- Seed Database Endpoint (for testing) ---
+app.post('/api/seed', async (req, res) => {
+  try {
+    console.log('🌱 Seeding database with test data...');
+    const User = require('./models/User');
+    const bcrypt = require('bcryptjs');
+    
+    // Check if test user already exists
+    const existingUser = await User.findOne({ email: 'test@aits.edu' });
+    if (existingUser) {
+      return res.json({ msg: 'Test user already exists', email: 'test@aits.edu', password: 'test123' });
+    }
+    
+    // Create test user
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash('test123', salt);
+    
+    const testUser = new User({
+      name: 'Test User',
+      email: 'test@aits.edu',
+      password: hashedPassword,
+      bio: 'Test user for VisionX',
+      skills: ['React', 'Node.js', 'MongoDB'],
+      role: 'beginner',
+      points: 0
+    });
+    
+    await testUser.save();
+    console.log('✅ Test user created:', testUser.email);
+    
+    res.json({ 
+      msg: 'Database seeded with test user',
+      email: 'test@aits.edu',
+      password: 'test123'
+    });
+  } catch (err) {
+    console.error('❌ Seed error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Load routes
 try {
-  // app.use('/api/auth', require('./routes/auth')); // Auth disabled for now
+  app.use('/api/auth', require('./routes/auth'));
   app.use('/api/questions', require('./routes/questions'));
   app.use('/api/projects', require('./routes/projects'));
   console.log('✅ Routes loaded successfully');
